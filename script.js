@@ -4,6 +4,8 @@ const chatapiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions"
 var onRecognizing = false;
 var spacePressing = false;
 var recognizedWords = "";
+var TTSVoice = 'en-US-AIGenerate2Neural';
+const savingPrice = true;
 
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
@@ -23,23 +25,24 @@ var AIFeedback = document.querySelector('.AIFeedback');
 
 
 dictateButton.onclick = function () {
+
   // console.log(onRecognizing);
-  if (onRecognizing===false) {
+  if (onRecognizing === false) {
     recognition.start();
     onRecognizing = true;
     // dictateButton.disabled = true;
     dictateButton.textContent = 'Recognizing...';
     diagnostic.textContent = '-Keep talking-';
     console.log('Ready to receive a color command.');
-  }else if (onRecognizing===true) {
+  } else if (onRecognizing === true) {
     recognition.stop();
     onRecognizing = false;
     // dictateButton.disabled = false;
     dictateButton.textContent = 'Tap to start dictating';
   }
-  
+
 }
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', function (event) {
   if (event.key === ' ' && onRecognizing === false) {
     // Your JavaScript code here
     dictateButton.onclick();
@@ -47,7 +50,7 @@ document.addEventListener('keydown', function(event) {
     console.log("Detected Keydown");
   }
 });
-document.addEventListener('keyup', function(event) {
+document.addEventListener('keyup', function (event) {
   if (event.key === ' ') {
     // Your JavaScript code here
     if (onRecognizing === true) {
@@ -82,7 +85,10 @@ recognition.onresult = function (event) {
 recognition.onspeechend = function (event) {
   // recognition.stop();
   // dictateButton.textContent = 'Tap to start dictating';
-  goAI(recognizedWords, true);
+  // goTTS("HAPPYHAPPY");
+  goAI(recognizedWords, false);
+  // goAzureTTS("000");
+
 }
 
 recognition.onnomatch = function (event) {
@@ -133,8 +139,11 @@ function goTTS(text) {
     .then(data => {
       console.log(data);
       const audioUrl = data.audio_file_url;
-      fetch(proxyUrl + audioUrl)
-        .then(response => response.blob())
+      fetch(audioUrl)
+        .then(response => {
+          console.log(response);
+          return response.blob();
+        })
         .then(blob => {
           const audio = new Audio(URL.createObjectURL(blob));
           audio.play();
@@ -144,12 +153,14 @@ function goTTS(text) {
     .catch(error => console.log(error));
 
 }
+
 function goAI(recognizedWords, testing) {
-    //发送信息到API
-    console.log('Ready to send data to OpenAI...');
+  //发送信息到API
+  console.log('Ready to send data to OpenAI...');
   const postData = JSON.stringify({
     model: 'gpt-3.5-turbo',
     messages: [{ role: 'user', content: recognizedWords }],
+    max_tokens: 1000,
   });
 
   const options = {
@@ -160,32 +171,68 @@ function goAI(recognizedWords, testing) {
     },
     body: postData,
   };
-  if (testing===false) {
+  if (testing === false) {
     console.log("Now send data to GPT");
     //OK Below
-  fetch('https://openai.api2d.net/v1/chat/completions', options)
-  // .then(response => {
-  //   console.log('statusCode:', response.status);
-  //   console.log('headers:', response.headers);
-  //   return response.json();
-  // })
-  .then(response => response.json())
-  .then(data => {
-    var feedback = data.choices[0].message.content;
-    goTTS(feedback);
-    AIFeedback.textContent = 'AI Professor: ' + feedback;
-    console.log('Response is successfully received.');
-    console.log(data);
-    console.log(feedback);
-  })
-  .catch(error => {
-    console.error('Failed to get response. ' + error);
-    AIFeedback.textContent = 'Sorry, AI Professor cannot respond you now.';
-  });
-  console.log('Words are sent to OpenAI.');
-//OK Above
-  }else {
+    fetch('https://openai.api2d.net/v1/chat/completions', options)
+      // .then(response => {
+      //   console.log('statusCode:', response.status);
+      //   console.log('headers:', response.headers);
+      //   return response.json();
+      // })
+      .then(response => response.json())
+      .then(data => {
+        var feedback = data.choices[0].message.content;
+        if (savingPrice === true) {
+          goTTS(feedback);
+        }else {
+          goAzureTTS(feedback);
+        }
+        AIFeedback.textContent = 'AI Professor: ' + feedback;
+        console.log('Response is successfully received.');
+        console.log(data);
+        console.log(feedback);
+      })
+      .catch(error => {
+        console.error('Failed to get response. ' + error);
+        AIFeedback.textContent = 'Sorry, AI Professor cannot respond you now.';
+      });
+    console.log('Words are sent to OpenAI.');
+    //OK Above
+  } else {
     console.log("Not sending");
   }
-  
+
 }
+
+function goAzureTTS(text) {
+
+  const postData = JSON.stringify({
+    text: text,
+    voiceName: TTSVoice,
+    responseType: 'blob-url',
+    speed: 1.0
+  });
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + apiKey,
+    },
+    body: postData,
+  };
+
+  fetch('https://openai.api2d.net/azure/tts', options)
+    .then(response => {
+      console.log(response);
+      return response.blob();
+    })
+    .then(blob => {
+      const audio = new Audio(URL.createObjectURL(blob));
+      audio.play();
+    })
+    .catch(error => console.log(error));
+
+}
+
