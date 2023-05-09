@@ -1,0 +1,83 @@
+
+
+
+
+
+  // var rec = {"id":"chatcmpl-7EHH5TxHjyJ3GId4RdcwEvKF7qKG1","object":"chat.completion","created":1683637351,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":13,"completion_tokens":14,"total_tokens":27,"pre_token_count":4096,"pre_total":42,"adjust_total":41,"final_total":1},"choices":[{"message":{"role":"assistant","content":"Why don't scientists trust atoms? \n\nBecause they make up everything!"},"finish_reason":"stop","index":0}]}
+  // AIFeedback.textContent = rec.
+
+
+
+
+  // var postData = JSON.stringify({
+  //   model: 'gpt-3.5-turbo',
+  //   messages: [{ role: 'user', content: recognizedWords }],
+  // });
+  // var options = {
+  //   hostname: 'openai.api2d.net',
+  //   port: 443,
+  //   path: '/v1/chat/completions',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: 'Bearer ' + apiKey, // <-- 把 fkxxxxx 替换成你自己的 Forward Key，注意前面的 Bearer 要保留，并且和 Key 中间有一个空格。
+  //   },
+  // };
+
+  // fetch('https://openai.api2d.net/v1/chat/completions', options)
+  // .then(response => {
+  //   console.log('statusCode:', response.status);
+  //   console.log('headers:', response.headers);
+  //   return response.text();
+  // })
+  // .then(data => {
+  //   AIFeedback.textContent = 'AI Professor: ' + data;
+  //   console.log('Response is successfully received.');
+  // })
+  // .catch(error => {
+  //   console.error('Failed to get response. ' + error);
+  //   AIFeedback.textContent = 'Sorry, AI Professor cannot respond you now.';
+  // });
+
+  // var req = https.request(options, (res) => {
+  //   console.log('statusCode:', res.statusCode);
+  //   console.log('headers:', res.headers);
+
+  //   res.on('data', (d) => {
+  //     // process.stdout.write(d);
+  //     AIFeedback.textContent = 'AI Professor: '+ d;
+  //     console.log('Response is successfully received.');
+  //   });
+  // });
+
+  // req.on('error', (e) => {
+  //   console.error('Failed to get response. ' + e);
+  //   AIFeedback.textContent = 'Sorry, AI Professor cannot respond you now.';
+  // });
+
+
+
+//ChatGPT API
+// async function generateText(prompt) {
+//   const response = await fetch(apiUrl, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Authorization": `Bearer ${apiKey}`
+//     },
+//     body: JSON.stringify({
+//       prompt: prompt,
+//       max_tokens: 50,
+//       n: 1,
+//       stop: "\n"
+//     })
+//   });
+//   const data = await response.json();
+//   return data.choices[0].text.trim();
+// }
+
+// generateText(prompt).then((text) => {
+//   console.log(text);
+// }).catch((error) => {
+//   console.error(error);
+// });

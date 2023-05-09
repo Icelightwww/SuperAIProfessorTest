@@ -1,0 +1,18 @@
+{
+    "error_code": "0",
+    "status": "success",
+    "error_details": "Successful Speech Synthesis. ",
+    "unix_timestamp": 1677980022,
+    "audio_file_url": "https://s4.ttsmaker.com/file/2023-03-05-093341_165106.mp3",
+    "audio_file_type": "mp3",
+    "audio_file_expire_time": 1677987222,
+    "tts_elapsed_time": "1.91s",
+    "tts_order_characters": 10,
+    "token_status": {
+      "current_cycle_max_characters": 50000,
+      "current_cycle_characters_used": 190,
+      "current_cycle_characters_available": 49810,
+      "remaining_days_to_reset_quota": 4.44,
+      "history_characters_used": 190
+    }
+  }

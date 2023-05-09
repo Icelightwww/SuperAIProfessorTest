@@ -1,0 +1,41 @@
+body, html {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+  text-align: center;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  height: inherit;
+  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+  /* background-color: moccasin; */
+  background: linear-gradient(to right, #080b40, #8f94fb);
+  animation: gradient-animation 5s linear infinite;
+}
+
+
+h1, h3, p {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+output {
+  margin: 0 auto;
+}
